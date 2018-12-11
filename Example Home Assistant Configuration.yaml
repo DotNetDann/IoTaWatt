@@ -1,0 +1,20 @@
+sensor:
+  - platform: rest
+    name: IoTaWatt
+    json_attributes:
+      - inputs
+      - outputs
+    resource: http://192.168.xxx.xxx/status?inputs=yes&outputs=yes
+    value_template: '{{ value_json.inputs[0].Vrms }}v'
+    scan_interval: 5
+
+  - platform: template
+    sensors:
+      iotawatt_1:
+        friendly_name_template: 'Channel {{ states.sensor.iotawatt.attributes["inputs"][1].channel }}'
+        unit_of_measurement: 'Watts'
+        value_template: '{{ states.sensor.iotawatt.attributes["inputs"][1].Watts }}'
+      iotawatt_total:
+        friendly_name_template: '{{ states.sensor.iotawatt.attributes["outputs"][0].name }}'
+        unit_of_measurement: 'Watts'
+        value_template: '{{ states.sensor.iotawatt.attributes["outputs"][0].value }}'
